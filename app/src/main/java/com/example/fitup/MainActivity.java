@@ -34,7 +34,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore nFirestore;
-    int GOOGLE_FIT_PERMISSIONS_REQUEST_CODE = 0533;
+    int GOOGLE_FIT_PERMISSIONS_REQUEST_CODE = System.identityHashCode(this) & 0xFFFF;
     private Button ajustes;
     static final String LOG_TAG = "FitUP!";
     @Override
@@ -93,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
 
         DataReadRequest readRequest = new DataReadRequest.Builder()
                 .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
+                //El bucket siguiente es necesario, sino me casca con : java.lang.IllegalStateException: Must specify a valid bucketing strategy while requesting aggregation
+                .bucketByTime(1, TimeUnit.DAYS)
                 .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
                 .build();
 
