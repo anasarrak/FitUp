@@ -18,14 +18,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore nFirestore;
-    private Button saveButton;
+    private Button ajustes;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FirebaseApp.initializeApp(this);
         nFirestore = FirebaseFirestore.getInstance();
-        saveButton = (Button) findViewById(R.id.saveBtn);
+
+        /*saveButton = (Button) findViewById(R.id.saveBtn);
         saveButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 System.out.println("clickao");
@@ -39,6 +40,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }
-        });
+        });*/
     }
 }
