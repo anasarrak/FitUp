@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         setContentView(R.layout.activity_main);
         FirebaseApp.initializeApp(this);
         nFirestore = FirebaseFirestore.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
+        //FirebaseUser user = mAuth.getCurrentUser();
 
         setContentView(R.layout.activity_main);
 
