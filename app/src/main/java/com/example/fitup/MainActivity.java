@@ -54,17 +54,18 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.FirebaseAuthCredentialsProvider;
 
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, SensorEventListener {
+public class MainActivity extends AppCompatActivity implements  SensorEventListener {
     private FirebaseFirestore nFirestore;
     int GOOGLE_FIT_PERMISSIONS_REQUEST_CODE = System.identityHashCode(this) & 0xFFFF;
     private static final int REQUEST_OAUTH_REQUEST_CODE = 0x1001;
     private Button ajustes;
     static final String LOG_TAG = "FitUP!";
     boolean running = false;
+
+    private Button btnLogOut;
     TextView steps;
     SensorManager sensorManager;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private GoogleApiClient mClient = null;
     private static final String TAGFit = "FitActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +73,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         setContentView(R.layout.activity_main);
         FirebaseApp.initializeApp(this);
         nFirestore = FirebaseFirestore.getInstance();
-        //FirebaseUser user = mAuth.getCurrentUser();
 
         setContentView(R.layout.activity_main);
 
-
+        btnLogOut = findViewById(R.id.logOutBtn);
 
         FitnessOptions fitnessOptions =
                 FitnessOptions.builder()
@@ -92,26 +92,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         } else {
             subscribe();
         }
-        
-/*
-        login();
 
-        FitnessOptions fitnessOptions = FitnessOptions.builder()
-                .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-                .build();
-
-        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(this), fitnessOptions)) {
-            GoogleSignIn.requestPermissions(
-                    this, // your activity
-                    GOOGLE_FIT_PERMISSIONS_REQUEST_CODE,
-                    GoogleSignIn.getLastSignedInAccount(this),
-                    fitnessOptions);
-        } else {
-            accessGoogleFit();
-        }*/
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+        btnLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //if(mAuth.getCurrentUser().isAnonymous()){
+                    mAuth.signOut();
+                    startActivity(new Intent(MainActivity.this,login.class));
+            }
+        });
 
     }
 
@@ -135,38 +127,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
 
-    private void login() {
-        mAuth.signInAnonymously()
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("User", "signInAnonymously:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            System.out.println("The user is : "+user.getUid());
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("User", "signInAnonymously:failure", task.getException());
-                        }
-                    }
-                });
-    }
-
-
-
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        //fetchUserGoogleFitData(selectedDate);
-
-    }
-
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
 
     @Override
     protected void onResume() {
@@ -186,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void onPause() {
         super.onPause();
         running = false;
-        //sensorManager.unregisterListener(this);
+
     }
     //Calculate the current steps using the sensor and add it to Firebase
     @Override
@@ -194,8 +154,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         if (running){
             steps = findViewById(R.id.steps);
             final Map<String,String> userMap = new HashMap<>();
-            //userMap.put("steps",String.valueOf(event.values[0]));
-            //userMap.put("top","10");
 
             Fitness.getHistoryClient(this, GoogleSignIn.getLastSignedInAccount(this))
                     .readDailyTotal(DataType.TYPE_STEP_COUNT_DELTA)
@@ -207,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                                             dataSet.isEmpty()
                                                     ? 0
                                                     : dataSet.getDataPoints().get(0).getValue(Field.FIELD_STEPS).asInt();
-                                    Toast.makeText(MainActivity.this, String.valueOf(total), Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(MainActivity.this, String.valueOf(total), Toast.LENGTH_SHORT).show();
                                     userMap.put("steps",String.valueOf(total));
                                     userMap.put("top","9");
                                     nFirestore.collection("user").document(mAuth.getCurrentUser().getUid()).set(userMap);

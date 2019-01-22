@@ -14,12 +14,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class login extends AppCompatActivity {
     private EditText mEmail;
     private EditText mPassword;
 
     private Button mLogin;
+    private Button mLoginGuest;
 
     private FirebaseAuth mAuth;
 
@@ -35,6 +37,8 @@ public class login extends AppCompatActivity {
         mPassword = findViewById(R.id.passField);
 
         mLogin = findViewById(R.id.loginBtn);
+        mLoginGuest = findViewById(R.id.loginGuestBtn);
+
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -52,6 +56,27 @@ public class login extends AppCompatActivity {
             }
         });
 
+        mLoginGuest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startGuestSignIn();
+            }
+        });
+
+    }
+
+    private void startGuestSignIn() {
+        mAuth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()){
+                    startActivity(new Intent(login.this,MainActivity.class));
+                }else{
+                    Toast.makeText(login.this, "Error Al intentar logearte como invitado", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
     }
 
     @Override
@@ -59,6 +84,7 @@ public class login extends AppCompatActivity {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
+
 
     private void startSingIn(){
         String email = mEmail.getText().toString();
