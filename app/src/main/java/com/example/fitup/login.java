@@ -15,6 +15,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class login extends AppCompatActivity {
     private EditText mEmail;
@@ -24,6 +28,7 @@ public class login extends AppCompatActivity {
     private Button mLoginGuest;
 
     private FirebaseAuth mAuth;
+    private FirebaseFirestore nFirestore;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
     @Override
@@ -32,7 +37,7 @@ public class login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
-
+        nFirestore = FirebaseFirestore.getInstance();
         mEmail = findViewById(R.id.emailField);
         mPassword = findViewById(R.id.passField);
 
@@ -70,6 +75,11 @@ public class login extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
+                    final Map<String,String> groupAdd = new HashMap<>();
+                    groupAdd.put("group","guest");
+                    groupAdd.put("steps","");
+                    groupAdd.put("top","0");
+                    nFirestore.collection("user").document(mAuth.getCurrentUser().getUid()).set(groupAdd);
                     startActivity(new Intent(login.this,MainActivity.class));
                 }else{
                     Toast.makeText(login.this, "Error Al intentar logearte como invitado", Toast.LENGTH_SHORT).show();

@@ -49,8 +49,13 @@ import java.util.concurrent.TimeUnit;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.auth.FirebaseAuthCredentialsProvider;
 
 
@@ -66,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements  SensorEventListe
     TextView steps;
     SensorManager sensorManager;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    String group;
+    int top;
     private static final String TAGFit = "FitActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,8 +173,12 @@ public class MainActivity extends AppCompatActivity implements  SensorEventListe
                                                     ? 0
                                                     : dataSet.getDataPoints().get(0).getValue(Field.FIELD_STEPS).asInt();
                                     //Toast.makeText(MainActivity.this, String.valueOf(total), Toast.LENGTH_SHORT).show();
+                                    group = getGroup();
+                                    userMap.put("group",group);
                                     userMap.put("steps",String.valueOf(total));
-                                    userMap.put("top","9");
+                                    calculateTop();
+                                    top = calculateTop();
+                                    userMap.put("top",String.valueOf(top));
                                     nFirestore.collection("user").document(mAuth.getCurrentUser().getUid()).set(userMap);
                                     steps.setText(String.valueOf(total));
 
@@ -181,6 +192,54 @@ public class MainActivity extends AppCompatActivity implements  SensorEventListe
                                 }
                             });
         }
+    }
+    private int actual = 1;
+    private int position = 0;
+    private int calculateTop() {
+
+        CollectionReference dbref = nFirestore.collection("user");
+
+        dbref.orderBy("steps",Query.Direction.DESCENDING).limit(10).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                actual = 0;
+               if (task.isSuccessful()){
+                   for (QueryDocumentSnapshot document : task.getResult()){
+                       actual++;
+                       if (document.getId().equalsIgnoreCase(mAuth.getUid())){
+                           position = actual;
+                           Log.d("Mostrando datos", String.valueOf(document.getData().get("steps")));
+                       }
+
+                   }
+               }
+            }
+
+        });
+        return actual;
+    }
+
+    private String getGroup() {
+       String group="";
+       /* DocumentReference docRef = nFirestore.collection("user").document(mAuth.getCurrentUser().getUid());
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()){
+                        Log.d("MOSTRANDO ", "DocumentSnapshot data: " + document.getData().get("group"));
+                        grupo[0] = document.getData().get("group").toString();
+                    }else{
+                        grupo[0] = "nogroup";
+                    }
+                }
+            }
+        });*/
+       if (mAuth.getCurrentUser().isAnonymous()){
+           group = "guest";
+       }
+        return group;
     }
 
     @Override
