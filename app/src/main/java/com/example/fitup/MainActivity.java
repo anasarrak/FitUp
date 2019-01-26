@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements  SensorEventListe
     SensorManager sensorManager;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     User u;
+    Grupo g ;
     private static final String TAGFit = "FitActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements  SensorEventListe
         FirebaseApp.initializeApp(this);
         nFirestore = FirebaseFirestore.getInstance();
         u = new User();
+        g = new Grupo();
         setContentView(R.layout.activity_main);
 
         btnLogOut = findViewById(R.id.logOutBtn);
@@ -163,9 +165,10 @@ public class MainActivity extends AppCompatActivity implements  SensorEventListe
                                                     : dataSet.getDataPoints().get(0).getValue(Field.FIELD_STEPS).asInt();
                                     getGroup();
                                     //u.setGroup("group");
+                                    System.out.println("GROUP "+u.getGroup());
                                     u.setSteps(String.valueOf(total));
                                     u.setTop("10");
-
+                                    u.setUid(mAuth.getCurrentUser().getUid());
                                     /*userMap.get("group") = getGroup().get("group");*/
                                     //userMap.put("group",getGroup().get("group"));
                                     //userMap.put("steps",String.valueOf(total));
@@ -216,17 +219,26 @@ public class MainActivity extends AppCompatActivity implements  SensorEventListe
     //final Map<String, Object> datos = new HashMap<String,Object>();
 
        if (mAuth.getCurrentUser().isAnonymous()){
-           u.setGroup("guest");
+           g.setGroup("guest");
+           u.setGroup(g);
+           //nFirestore.collection("user").document(mAuth.getCurrentUser().getUid()).set(g);
        }else{
 
-           DocumentReference docRef = nFirestore.collection("user").document(mAuth.getCurrentUser().getUid());
+           DocumentReference docRef = nFirestore.collection("usergroup").document(mAuth.getCurrentUser().getUid());
            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
 
                @Override
                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                    if (task.isSuccessful()){
                        DocumentSnapshot document = task.getResult();
-                       u = document.toObject(User.class);
+                       g = document.toObject(Grupo.class);
+                       u.setGroup(g);
+                       nFirestore.collection("user").document(mAuth.getCurrentUser().getUid()).update("group",g.getGroup()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                           @Override
+                           public void onSuccess(Void aVoid) {
+                               //Toast.makeText(MainActivity.this, "Updateado", Toast.LENGTH_SHORT).show();
+                           }
+                       });
                    }
                }
            });

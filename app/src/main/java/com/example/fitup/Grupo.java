@@ -7,6 +7,10 @@ public class Grupo {
         this.group = group;
     }
 
+    public Grupo() {
+
+    }
+
     public String getGroup() {
         return group;
     }

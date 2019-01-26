@@ -2,15 +2,15 @@ package com.example.fitup;
 
 public class User {
     private String uid;
-    private String group;
+    //private String group;
     private String steps;
     private String top;
-
+    private Grupo group;
 
     public User() {
     }
 
-    public User(String group, String steps, String top) {
+    public User(Grupo group, String steps, String top) {
         this.group = group;
         this.steps = steps;
         this.top = top;
@@ -25,11 +25,11 @@ public class User {
         this.uid = uid;
     }
 
-    public String getGroup() {
+    public Grupo getGroup() {
         return group;
     }
 
-    public void setGroup(String group) {
+    public void setGroup(Grupo group) {
         this.group = group;
     }
 
