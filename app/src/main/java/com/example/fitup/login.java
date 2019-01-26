@@ -79,7 +79,7 @@ public class login extends AppCompatActivity {
                     groupAdd.put("group","guest");
                     groupAdd.put("steps","");
                     groupAdd.put("top","0");
-                    nFirestore.collection("user").document(mAuth.getCurrentUser().getUid()).set(groupAdd);
+                    nFirestore.collection("User").document(mAuth.getCurrentUser().getUid()).set(groupAdd);
                     startActivity(new Intent(login.this,MainActivity.class));
                 }else{
                     Toast.makeText(login.this, "Error Al intentar logearte como invitado", Toast.LENGTH_SHORT).show();
