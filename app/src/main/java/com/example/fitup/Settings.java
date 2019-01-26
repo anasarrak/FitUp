@@ -4,20 +4,17 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
 
@@ -25,6 +22,7 @@ public class Settings extends AppCompatActivity implements AdapterView.OnItemSel
     private Spinner sp;
     private FirebaseFirestore nFirestore;
     private ArrayList<String> grupos = new ArrayList<>();
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +30,7 @@ public class Settings extends AppCompatActivity implements AdapterView.OnItemSel
         //FirebaseApp.initializeApp(this);
         nFirestore = FirebaseFirestore.getInstance();
         sp = findViewById(R.id.sGroup);
+
 
         nFirestore.collection("groups").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -61,7 +60,10 @@ public class Settings extends AppCompatActivity implements AdapterView.OnItemSel
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String text = parent.getItemAtPosition(position).toString();
-        Toast.makeText(parent.getContext(),text,Toast.LENGTH_LONG).show();
+        User u = new User();
+        Grupo g = new Grupo(text);
+        u.setUid(mAuth.getCurrentUser().getUid());
+        nFirestore.collection("usergroup").document(mAuth.getCurrentUser().getUid()).set(g);
     }
 
     @Override

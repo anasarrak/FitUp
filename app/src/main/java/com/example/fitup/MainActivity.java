@@ -92,7 +92,9 @@ public class MainActivity extends AppCompatActivity implements  SensorEventListe
                     startActivity(new Intent(MainActivity.this,login.class));
             }
         });
-
+        if (mAuth.getCurrentUser().isAnonymous()){
+            settings.setEnabled(false);
+        }
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
