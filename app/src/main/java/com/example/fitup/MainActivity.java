@@ -50,8 +50,6 @@ public class MainActivity extends AppCompatActivity implements  SensorEventListe
     TextView steps;
     SensorManager sensorManager;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    String group;
-    int top;
     User u;
     private static final String TAGFit = "FitActivity";
     @Override

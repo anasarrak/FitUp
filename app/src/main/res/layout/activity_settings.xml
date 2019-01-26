@@ -11,7 +11,7 @@
         android:id="@+id/tfIkas2"
         android:layout_width="66dp"
         android:layout_height="44dp"
-        android:layout_marginStart="152dp"
+        android:layout_marginStart="144dp"
         android:layout_marginTop="28dp"
         android:text="ikas"
         android:textColor="#adde34"
@@ -24,6 +24,7 @@
         android:id="@+id/tfFit2"
         android:layout_width="74dp"
         android:layout_height="38dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="28dp"
         android:layout_marginEnd="116dp"
         android:text=".fit"
@@ -31,6 +32,7 @@
         android:textSize="33dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tfIkas2"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -40,11 +42,25 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="44dp"
         android:layout_marginEnd="8dp"
-        android:text="Settings"
+        android:text="Ajustes"
         android:textColor="#fcfafd"
         android:textSize="33dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tfFit2" />
+
+    <Spinner
+        android:id="@+id/sGroup"
+        android:layout_width="395dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="44dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="#fcfafd"
+        android:textColor="#fcfafd"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settings" />
+
 </android.support.constraint.ConstraintLayout>
