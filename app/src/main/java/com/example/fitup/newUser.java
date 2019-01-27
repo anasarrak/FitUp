@@ -91,9 +91,9 @@ public class newUser extends AppCompatActivity implements AdapterView.OnItemSele
         String password = mPasswordCu.getText().toString();
         String password2 = mPassword2Cu.getText().toString();
 
-      /*  if (TextUtils.isEmpty(user)|| TextUtils.isEmpty(password) || TextUtils.isEmpty(password2)){
-            Toast.makeText(newUser.this, "Campos Vacios", Toast.LENGTH_SHORT).show();
-        }else{*/
+        if (TextUtils.isEmpty(user)|| TextUtils.isEmpty(password) || TextUtils.isEmpty(password2) || !password.equalsIgnoreCase(password2)){
+            Toast.makeText(newUser.this, "Campos Vacios o la contraseña no coincide", Toast.LENGTH_SHORT).show();
+        }else{
             mAuth.createUserWithEmailAndPassword("anasarrak@acutronic.com","anasarrak")
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -107,7 +107,7 @@ public class newUser extends AppCompatActivity implements AdapterView.OnItemSele
                             }
                         }
                     });
-       // }
+        }
 
     }
     @Override
