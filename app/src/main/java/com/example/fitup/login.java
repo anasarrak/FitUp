@@ -26,6 +26,7 @@ public class login extends AppCompatActivity {
 
     private Button mLogin;
     private Button mLoginGuest;
+    private Button mCrearCuenta;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore nFirestore;
@@ -43,6 +44,7 @@ public class login extends AppCompatActivity {
 
         mLogin = findViewById(R.id.loginBtn);
         mLoginGuest = findViewById(R.id.loginGuestBtn);
+        mCrearCuenta = findViewById(R.id.crearCuentaBtn);
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -65,6 +67,13 @@ public class login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startGuestSignIn();
+            }
+        });
+
+        mCrearCuenta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(login.this,newUser.class));
             }
         });
 

@@ -11,15 +11,12 @@
         android:id="@+id/tfIkas3"
         android:layout_width="66dp"
         android:layout_height="44dp"
-        android:layout_marginStart="120dp"
+        android:layout_marginStart="144dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
         android:text="ikas"
         android:textColor="#adde34"
         android:textSize="33dp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.156"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,7 +32,6 @@
         android:textSize="33dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/tfIkas3"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -67,6 +63,20 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passField" />
+
+    <Button
+        android:id="@+id/crearCuentaBtn"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="203dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="180dp"
+        android:backgroundTintMode="screen"
+        android:text="Crear Cuenta"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.485"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passField" />
 
@@ -112,7 +122,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="20dp" />
+        app:layout_constraintGuide_percent="0.03009576" />
 
     <android.support.constraint.Barrier
         android:id="@+id/barrier"

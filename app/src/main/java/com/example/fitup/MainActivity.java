@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements  SensorEventListe
                             int x = 0;
                             for (QueryDocumentSnapshot d : task.getResult()){
                                 User us =  d.toObject(User.class);
-                                System.out.println(us.getUid());
+                                //System.out.println(us.getUid());
                                 x++;
                                 if (us.getUid() != null && us.getUid().equalsIgnoreCase(mAuth.getUid())){
                                     u.setTop(String.valueOf(x));
