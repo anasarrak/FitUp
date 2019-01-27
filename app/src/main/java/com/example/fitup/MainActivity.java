@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements  SensorEventListe
     private Button btnLogOut;
     private Button settings;
     TextView steps;
+    TextView posIni;
+    TextView posFin;
     SensorManager sensorManager;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     User u;
@@ -64,8 +66,10 @@ public class MainActivity extends AppCompatActivity implements  SensorEventListe
         setContentView(R.layout.activity_main);
 
         btnLogOut = findViewById(R.id.logOutBtn);
-
         settings = findViewById(R.id.ajustesBtn);
+
+        posIni = findViewById(R.id.tfIni);
+        posFin = findViewById(R.id.tfFin);
 
         batch = nFirestore.batch();
         FitnessOptions fitnessOptions =
@@ -164,11 +168,12 @@ public class MainActivity extends AppCompatActivity implements  SensorEventListe
                                                     ? 0
                                                     : dataSet.getDataPoints().get(0).getValue(Field.FIELD_STEPS).asInt();
                                     getGroup();
-                                    //u.setGroup("group");
-                                    System.out.println("GROUP "+u.getGroup());
                                     u.setSteps(String.valueOf(total));
                                     u.setTop("10");
                                     u.setUid(mAuth.getCurrentUser().getUid());
+                                    getTopPos();
+
+                                    //u.setGroup("group");
                                     /*userMap.get("group") = getGroup().get("group");*/
                                     //userMap.put("group",getGroup().get("group"));
                                     //userMap.put("steps",String.valueOf(total));
@@ -191,10 +196,46 @@ public class MainActivity extends AppCompatActivity implements  SensorEventListe
                             });
         }
     }
+
+    private void getTopPos() {
+        CollectionReference cUser = nFirestore.collection("user");
+        //W/Firestore: (0.6.6-dev) [Firestore]: Listen for Query(user where group == guest order by -steps, -__name__)
+        // failed: Status{code=FAILED_PRECONDITION, description=The query requires an index. You can create it here:
+        // https://console.firebase.google.com/project/fitup-5768f/database/firestore/indexes?create_index=EgR1c2VyGgkKBWdyb3VwEAIaCQoFc3RlcHMQAxoMCghfX25hbWVfXxAD, cause=null}
+        // Añadir esto para determinar una consulta compuesta
+        cUser.whereEqualTo("group",u.getGroup()).orderBy("steps",Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            QuerySnapshot document = task.getResult();
+                            posFin.setText(String.valueOf(document.size()));
+                            int x = 0;
+                            for (QueryDocumentSnapshot d : task.getResult()){
+                                User us =  d.toObject(User.class);
+                                System.out.println(us.getUid());
+                                x++;
+                                if (us.getUid() != null && us.getUid().equalsIgnoreCase(mAuth.getUid())){
+                                    u.setTop(String.valueOf(x));
+                                    posIni.setText(String.valueOf(x));
+                                }
+
+                            }
+                        }else{
+                            System.out.println("SUCCEDED");
+                        }
+                    }
+                });
+
+
+
+    }
+
     private int actual = 1;
     private int calculateTop() {
 
-        CollectionReference dbref = nFirestore.collection("User");
+        CollectionReference dbref = nFirestore.collection("user");
 
         dbref.orderBy("steps",Query.Direction.DESCENDING).limit(10).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -220,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements  SensorEventListe
 
        if (mAuth.getCurrentUser().isAnonymous()){
            g.setGroup("guest");
-           u.setGroup(g);
+           u.setGroup(g.getGroup());
            //nFirestore.collection("user").document(mAuth.getCurrentUser().getUid()).set(g);
        }else{
 
@@ -232,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements  SensorEventListe
                    if (task.isSuccessful()){
                        DocumentSnapshot document = task.getResult();
                        g = document.toObject(Grupo.class);
-                       u.setGroup(g);
+                       u.setGroup(g.getGroup());
                        nFirestore.collection("user").document(mAuth.getCurrentUser().getUid()).update("group",g.getGroup()).addOnSuccessListener(new OnSuccessListener<Void>() {
                            @Override
                            public void onSuccess(Void aVoid) {

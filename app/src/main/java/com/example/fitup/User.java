@@ -5,12 +5,13 @@ public class User {
     //private String group;
     private String steps;
     private String top;
-    private Grupo group;
+    // No lo dejo como Objeto Group ya que en firebase me crea una esctrucutra rara
+    private String group;
 
     public User() {
     }
 
-    public User(Grupo group, String steps, String top) {
+    public User(String group, String steps, String top) {
         this.group = group;
         this.steps = steps;
         this.top = top;
@@ -25,11 +26,11 @@ public class User {
         this.uid = uid;
     }
 
-    public Grupo getGroup() {
+    public String getGroup() {
         return group;
     }
 
-    public void setGroup(Grupo group) {
+    public void setGroup(String group) {
         this.group = group;
     }
 
