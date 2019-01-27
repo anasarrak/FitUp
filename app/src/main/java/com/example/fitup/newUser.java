@@ -103,7 +103,7 @@ public class newUser extends AppCompatActivity implements AdapterView.OnItemSele
         if (TextUtils.isEmpty(user)|| TextUtils.isEmpty(password) || TextUtils.isEmpty(password2) || !password.equalsIgnoreCase(password2)){
             Toast.makeText(newUser.this, "Campos Vacios o la contraseña no coincide", Toast.LENGTH_SHORT).show();
         }else{
-            mAuth.createUserWithEmailAndPassword("anasarrak@acutronic.com","anasarrak")
+            mAuth.createUserWithEmailAndPassword(user,password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
