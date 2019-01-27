@@ -20,9 +20,8 @@ Contiene los usuarios con la siguiente estructura
 ##### usergroup
 Contiene la "relación" de uId y el grupo al que pertenece
 
-#![img1](img/img1.png)
+![img1](img/img1.png)
 
-<img src="img/img1.png" width="500" >
 
 #### Funcionalidad de la aplicación
 
