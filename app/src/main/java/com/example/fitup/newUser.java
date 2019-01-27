@@ -1,5 +1,6 @@
 package com.example.fitup;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -52,7 +53,15 @@ public class newUser extends AppCompatActivity implements AdapterView.OnItemSele
         sCreateUser = findViewById(R.id.sCreateUser);
         btnCu = findViewById(R.id.cuBtn);
 
-
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (mAuth.getCurrentUser() != null){
+                    /*startActivity(new Intent(login.this,MainActivity.class));
+                    Toast.makeText(login.this, "USUARIO CORRECTO "+ mAuth.getCurrentUser().getUid(), Toast.LENGTH_SHORT).show();*/
+                }
+            }
+        };
 
         nFirestore.collection("groups").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
